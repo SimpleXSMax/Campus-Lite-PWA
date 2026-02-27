@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a5b9f">
+  <title>Campus Lite PWA</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <h1>Campus Lite</h1>
+        <p class="sub-title">大学生校园通轻量网页应用</p>
+      </div>
+      <div class="header-actions">
+        <span id="network-status" class="badge online">在线</span>
+        <button id="install-btn" class="btn secondary" hidden>安装应用</button>
+        <button id="account-entry" class="btn secondary account-btn" type="button">登录 / 注册</button>
+        <button id="logout-btn" class="btn ghost" type="button" hidden>退出</button>
+      </div>
+    </header>
+
+    <nav class="tab-nav" aria-label="主导航">
+      <button class="tab-btn active" data-view="home">首页</button>
+      <button class="tab-btn" data-view="news">校园新闻</button>
+      <button class="tab-btn" data-view="schedule">课表</button>
+      <button class="tab-btn" data-view="map">校园地图</button>
+      <button class="tab-btn" data-view="dashboard">数据看板</button>
+    </nav>
+
+    <main class="content">
+      <section id="view-home" class="view active" aria-labelledby="home-title">
+        <div class="section-head">
+          <h2 id="home-title">校园总览</h2>
+          <p id="welcome-text" class="hint">欢迎使用校园轻应用</p>
+        </div>
+
+        <div class="card-grid">
+          <article class="card status-card">
+            <h3>校园卡余额</h3>
+            <p class="status-value">126.50 元</p>
+            <p class="hint">本周食堂消费 92.00 元</p>
+          </article>
+
+          <article class="card status-card service-card">
+            <h3>图书馆座位</h3>
+            <p id="home-library-status" class="status-value">可预约 42 个</p>
+            <p id="home-library-hint" class="hint">晚间高峰 18:30 - 21:30</p>
+            <button class="btn secondary service-entry" type="button" data-service-view="library">进入座位中心</button>
+          </article>
+
+          <article class="card status-card service-card">
+            <h3>快递中心</h3>
+            <p id="home-express-status" class="status-value">2 件待取</p>
+            <p id="home-express-hint" class="hint">建议 20:00 前完成领取</p>
+            <button class="btn secondary service-entry" type="button" data-service-view="express">进入快递中心</button>
+          </article>
+
+          <article class="card status-card service-card">
+            <h3>校车到站</h3>
+            <p id="home-shuttle-status" class="status-value">东线 8 分钟</p>
+            <p id="home-shuttle-hint" class="hint">下一班 17:35 发车</p>
+            <button class="btn secondary service-entry" type="button" data-service-view="shuttle">进入校车中心</button>
+          </article>
+        </div>
+
+        <div class="utility-layout">
+          <article class="card">
+            <h3>常用服务</h3>
+            <div class="quick-grid">
+              <button class="quick-btn active" type="button" data-quick-service="grades">成绩查询</button>
+              <button class="quick-btn" type="button" data-quick-service="exams">考试安排</button>
+              <button class="quick-btn" type="button" data-quick-service="classroom">空教室查询</button>
+              <button class="quick-btn" type="button" data-quick-service="scholarship">奖学金通知</button>
+              <button class="quick-btn" type="button" data-quick-service="bus">校园巴士</button>
+              <button class="quick-btn" type="button" data-quick-service="lostfound">失物招领</button>
+            </div>
+
+            <div class="quick-workbench">
+              <div class="section-head">
+                <h4 id="quick-service-title">成绩查询</h4>
+                <p id="quick-service-hint" class="hint">选择学期并查看课程成绩和绩点估算</p>
+              </div>
+              <div id="quick-service-panel" class="quick-service-panel" aria-live="polite"></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>今日待办</h3>
+            <form id="todo-form" class="todo-form">
+              <input id="todo-input" type="text" maxlength="60" placeholder="例如：提交《数据库》实验报告">
+              <button class="btn" type="submit">添加</button>
+            </form>
+            <ul id="todo-list" class="todo-list"></ul>
+          </article>
+        </div>
+
+        <article class="card">
+          <h3>近期提醒</h3>
+          <ul class="notice-list">
+            <li>3 月 3 日：创新实践周报名截止</li>
+            <li>3 月 5 日：英语四六级模拟考试</li>
+            <li>3 月 8 日：奖学金申请材料提交截止</li>
+            <li>3 月 10 日：春季招聘双选会（体育馆）</li>
+          </ul>
+        </article>
+
+        <article class="card config-card">
+          <h3>个性化设置</h3>
+          <form id="settings-form">
+            <label>
+              课表背景主题
+              <select id="pref-theme" name="theme">
+                <option value="sky">天空蓝</option>
+                <option value="forest">青绿</option>
+                <option value="sunset">暖橙</option>
+              </select>
+            </label>
+
+            <label>
+              默认地图区域
+              <select id="pref-map-zone" name="mapZone">
+                <option value="library">图书馆</option>
+                <option value="canteen">食堂</option>
+                <option value="dorm">宿舍区</option>
+                <option value="sports">体育馆</option>
+                <option value="teaching">教学楼群</option>
+              </select>
+            </label>
+
+            <label class="inline-row">
+              <input id="pref-show-summary" name="showSummary" type="checkbox">
+              显示新闻摘要
+            </label>
+
+            <button class="btn" type="submit">保存配置</button>
+          </form>
+          <p id="settings-tip" class="hint" aria-live="polite"></p>
+        </article>
+      </section>
+
+      <section id="view-news" class="view" aria-labelledby="news-title">
+        <div class="section-head">
+          <h2 id="news-title">校园新闻</h2>
+          <p id="news-source" class="hint">加载中...</p>
+        </div>
+        <ul id="news-list" class="news-list">
+          <li class="news-item loading">正在读取新闻数据...</li>
+        </ul>
+      </section>
+
+      <section id="view-schedule" class="view" aria-labelledby="schedule-title">
+        <div class="section-head">
+          <h2 id="schedule-title">今日课表</h2>
+          <p id="exam-countdown" class="hint">最近考试倒计时：计算中...</p>
+        </div>
+        <div class="schedule-layout">
+          <div id="schedule-board" class="schedule-board">
+            <article class="schedule-item">
+              <strong>08:00 - 09:40</strong>
+              <span>高等数学</span>
+              <small>教学楼 A-203</small>
+            </article>
+            <article class="schedule-item">
+              <strong>10:00 - 11:40</strong>
+              <span>Web 前端工程</span>
+              <small>信息楼 C-502</small>
+            </article>
+            <article class="schedule-item">
+              <strong>14:00 - 15:40</strong>
+              <span>数据库原理</span>
+              <small>教学楼 B-401</small>
+            </article>
+            <article class="schedule-item">
+              <strong>19:00 - 20:30</strong>
+              <span>体育训练</span>
+              <small>体育馆羽毛球场</small>
+            </article>
+          </div>
+          <article class="card schedule-extra">
+            <h3>课程与出行建议</h3>
+            <ul class="notice-list">
+              <li>上午第二节课后，A 区到 C 区步行约 7 分钟</li>
+              <li>14:00 前教室空调统一开启，建议提前 10 分钟到场</li>
+              <li>晚间体育课后东区校车 20:45 与 21:05 发车</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="view-map" class="view" aria-labelledby="map-title">
+        <h2 id="map-title">校园地图</h2>
+        <article class="card map-card">
+          <div class="map-toolbar">
+            <p id="map-zone-label">当前关注区域：图书馆</p>
+            <div class="map-zone-switch" role="tablist" aria-label="地图区域切换">
+              <button class="zone-chip active" type="button" data-zone="library">图书馆</button>
+              <button class="zone-chip" type="button" data-zone="canteen">食堂</button>
+              <button class="zone-chip" type="button" data-zone="dorm">宿舍区</button>
+              <button class="zone-chip" type="button" data-zone="sports">体育馆</button>
+              <button class="zone-chip" type="button" data-zone="teaching">教学楼群</button>
+            </div>
+          </div>
+          <div class="map-layout">
+            <div id="campus-map-canvas" class="map-canvas" role="img" aria-label="校园地图交互示意">
+              <button class="map-spot active" type="button" data-zone="library" aria-label="图书馆区域">图书馆</button>
+              <button class="map-spot" type="button" data-zone="canteen" aria-label="食堂区域">食堂</button>
+              <button class="map-spot" type="button" data-zone="dorm" aria-label="宿舍区">宿舍</button>
+              <button class="map-spot" type="button" data-zone="sports" aria-label="体育馆区域">体育馆</button>
+              <button class="map-spot" type="button" data-zone="teaching" aria-label="教学楼群区域">教学楼</button>
+            </div>
+            <aside id="map-detail-panel" class="map-detail">
+              <h3 id="map-detail-title">图书馆</h3>
+              <p id="map-description" class="hint">图书馆位于校园中心区，适合自习与查阅资料。</p>
+              <ul class="map-meta">
+                <li>开放时间：<span id="map-open-time">07:30 - 23:30</span></li>
+                <li>当前人流：<span id="map-crowd-level">中等</span></li>
+                <li>推荐服务：<span id="map-service-tag">自习预约</span></li>
+              </ul>
+              <p id="map-route-tip" class="hint">路线建议：从南门步行 6 分钟可达。</p>
+            </aside>
+          </div>
+        </article>
+      </section>
+
+      <section id="view-dashboard" class="view" aria-labelledby="dashboard-title">
+        <div class="section-head">
+          <h2 id="dashboard-title">数据看板</h2>
+          <p id="dashboard-last-update" class="hint">最近更新：--</p>
+        </div>
+
+        <div id="dashboard-kpis" class="stats-grid"></div>
+
+        <div class="service-layout">
+          <article class="card">
+            <h3>近 7 天服务活跃度</h3>
+            <ul id="dashboard-usage-bars" class="bar-list"></ul>
+          </article>
+          <article class="card">
+            <h3>近 7 天访问趋势</h3>
+            <ul id="dashboard-daily-bars" class="bar-list"></ul>
+          </article>
+        </div>
+
+        <article class="card">
+          <h3>Lighthouse 对比数据录入</h3>
+          <form id="perf-metrics-form" class="service-form">
+            <div class="metrics-grid">
+              <label>传统页 FCP(s)<input type="number" step="0.1" min="0" name="traditionalFcp"></label>
+              <label>传统页 LCP(s)<input type="number" step="0.1" min="0" name="traditionalLcp"></label>
+              <label>传统页 TBT(ms)<input type="number" step="1" min="0" name="traditionalTbt"></label>
+              <label>传统页评分<input type="number" step="1" min="0" max="100" name="traditionalScore"></label>
+              <label>PWA首访 FCP(s)<input type="number" step="0.1" min="0" name="pwaFirstFcp"></label>
+              <label>PWA首访 LCP(s)<input type="number" step="0.1" min="0" name="pwaFirstLcp"></label>
+              <label>PWA首访 TBT(ms)<input type="number" step="1" min="0" name="pwaFirstTbt"></label>
+              <label>PWA首访评分<input type="number" step="1" min="0" max="100" name="pwaFirstScore"></label>
+              <label>PWA复访 FCP(s)<input type="number" step="0.1" min="0" name="pwaRepeatFcp"></label>
+              <label>PWA复访 LCP(s)<input type="number" step="0.1" min="0" name="pwaRepeatLcp"></label>
+              <label>PWA复访 TBT(ms)<input type="number" step="1" min="0" name="pwaRepeatTbt"></label>
+              <label>PWA复访评分<input type="number" step="1" min="0" max="100" name="pwaRepeatScore"></label>
+            </div>
+            <div class="resource-actions">
+              <button class="btn" type="submit">保存对比数据</button>
+              <button id="perf-fill-sample" class="btn secondary" type="button">填充示例</button>
+            </div>
+          </form>
+          <p id="perf-form-tip" class="hint"></p>
+        </article>
+
+        <article class="card">
+          <h3>性能对比可视化</h3>
+          <div id="perf-compare-bars" class="compare-chart"></div>
+          <div id="perf-compare-table" class="perf-table-wrap"></div>
+        </article>
+      </section>
+
+      <section id="view-account" class="view" aria-labelledby="account-title">
+        <div class="section-head">
+          <h2 id="account-title">登录与账号</h2>
+          <p id="auth-status" class="hint">当前状态：未登录</p>
+        </div>
+        <div class="account-layout">
+          <article class="card">
+            <div class="auth-tabs">
+              <button class="auth-tab active" type="button" data-auth-tab="login">登录</button>
+              <button class="auth-tab" type="button" data-auth-tab="register">注册</button>
+            </div>
+
+            <form id="login-form" class="auth-form active">
+              <label>
+                学号 / 用户名
+                <input id="login-username" name="username" type="text" maxlength="32" required>
+              </label>
+              <label>
+                密码
+                <input id="login-password" name="password" type="password" minlength="6" required>
+              </label>
+              <button class="btn" type="submit">登录</button>
+            </form>
+
+            <form id="register-form" class="auth-form">
+              <label>
+                学号 / 用户名
+                <input id="register-username" name="username" type="text" maxlength="32" required>
+              </label>
+              <label>
+                联系邮箱
+                <input id="register-email" name="email" type="email" required>
+              </label>
+              <label>
+                密码
+                <input id="register-password" name="password" type="password" minlength="6" required>
+              </label>
+              <label>
+                确认密码
+                <input id="register-confirm" name="confirmPassword" type="password" minlength="6" required>
+              </label>
+              <button class="btn" type="submit">注册并登录</button>
+            </form>
+            <p id="auth-feedback" class="hint" aria-live="polite"></p>
+          </article>
+
+          <article class="card profile-card">
+            <h3>当前会话</h3>
+            <p id="session-user" class="status-value">未登录</p>
+            <p id="session-time" class="hint">登录后可同步你的个性化设置和待办事项。</p>
+            <ul class="notice-list">
+              <li>支持模拟账号登录，模拟真实校内认证。</li>
+              <li>若用户名不存在，登录时会自动创建体验账号。</li>
+              <li>退出登录后，本地个性化设置仍会保留。</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="view-library" class="view service-view" aria-labelledby="library-title">
+        <div class="section-head">
+          <h2 id="library-title">图书馆座位中心</h2>
+          <button class="btn secondary back-home-btn" type="button" data-back-view="home">返回首页</button>
+        </div>
+
+        <article class="card">
+          <h3>数据源配置（第 1 项）</h3>
+          <form id="library-mode-form" class="service-form service-row-form">
+            <label>
+              数据模式
+              <select id="library-data-mode" name="mode">
+                <option value="mock">模拟数据（本地）</option>
+                <option value="api">REST API（联调）</option>
+              </select>
+            </label>
+            <label>
+              API 基地址
+              <input id="library-api-base" name="apiBase" type="text" placeholder="/api">
+            </label>
+            <button class="btn secondary" type="submit">应用配置</button>
+          </form>
+          <p id="library-api-status" class="hint">当前使用模拟数据，适合离线演示与毕设答辩。</p>
+        </article>
+
+        <div id="library-live-summary" class="stats-grid"></div>
+
+        <article class="card">
+          <h3>实时余量查询</h3>
+          <form id="library-live-filter" class="service-form service-row-form">
+            <label>
+              日期
+              <select id="library-filter-date" name="dateMode">
+                <option value="today">今天</option>
+                <option value="tomorrow">明天</option>
+              </select>
+            </label>
+            <label>
+              时段
+              <select id="library-filter-slot" name="slot">
+                <option value="08:00-10:00">08:00-10:00</option>
+                <option value="10:30-12:30">10:30-12:30</option>
+                <option value="14:00-16:00">14:00-16:00</option>
+                <option value="16:30-18:30">16:30-18:30</option>
+                <option value="19:00-21:00">19:00-21:00</option>
+              </select>
+            </label>
+            <button class="btn secondary" type="submit">刷新数据</button>
+          </form>
+          <ul id="library-floor-list" class="resource-list"></ul>
+        </article>
+
+        <div class="service-layout">
+          <article class="card">
+            <h3>预约座位</h3>
+            <form id="library-booking-form" class="service-form">
+              <label>
+                预约日期
+                <select id="library-booking-date" name="dateMode">
+                  <option value="today">今天</option>
+                  <option value="tomorrow">明天</option>
+                </select>
+              </label>
+              <label>
+                选择楼层
+                <select id="library-floor-select" name="floorId"></select>
+              </label>
+              <label>
+                预约时段
+                <select id="library-slot-select" name="slot"></select>
+              </label>
+              <label>
+                座位偏好
+                <select id="library-seat-type" name="seatType">
+                  <option value="window">靠窗</option>
+                  <option value="quiet">安静区</option>
+                  <option value="socket">带插座</option>
+                </select>
+              </label>
+              <button class="btn" type="submit">提交预约</button>
+            </form>
+            <p id="library-booking-tip" class="hint" aria-live="polite"></p>
+          </article>
+
+          <article class="card">
+            <h3>我的预约</h3>
+            <ul id="library-booking-list" class="resource-list"></ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="view-express" class="view service-view" aria-labelledby="express-title">
+        <div class="section-head">
+          <h2 id="express-title">快递中心</h2>
+          <button class="btn secondary back-home-btn" type="button" data-back-view="home">返回首页</button>
+        </div>
+
+        <div id="express-stats" class="stats-grid"></div>
+
+        <article class="card">
+          <h3>取件筛选与预约</h3>
+          <div class="filter-row" id="express-filter-row" role="tablist" aria-label="包裹状态筛选">
+            <button class="filter-chip active" type="button" data-express-filter="all">全部</button>
+            <button class="filter-chip" type="button" data-express-filter="pending">待领取</button>
+            <button class="filter-chip" type="button" data-express-filter="in_transit">运输中</button>
+            <button class="filter-chip" type="button" data-express-filter="received">已领取</button>
+          </div>
+
+          <form id="express-appointment-form" class="service-form service-row-form">
+            <label>
+              选择包裹
+              <select id="express-appointment-package" name="packageId"></select>
+            </label>
+            <label>
+              预约取件时间
+              <input id="express-appointment-time" name="appointmentTime" type="datetime-local">
+            </label>
+            <button class="btn secondary" type="submit">保存预约</button>
+          </form>
+
+          <ul id="express-list" class="resource-list"></ul>
+          <p id="express-tip" class="hint" aria-live="polite"></p>
+        </article>
+      </section>
+
+      <section id="view-shuttle" class="view service-view" aria-labelledby="shuttle-title">
+        <div class="section-head">
+          <h2 id="shuttle-title">校车到站中心</h2>
+          <button class="btn secondary back-home-btn" type="button" data-back-view="home">返回首页</button>
+        </div>
+
+        <article class="card">
+          <h3>线路规划</h3>
+          <form id="shuttle-planner-form" class="service-form service-row-form">
+            <label>
+              起点
+              <select id="shuttle-from" name="from"></select>
+            </label>
+            <label>
+              终点
+              <select id="shuttle-to" name="to"></select>
+            </label>
+            <button class="btn secondary" type="submit">生成路线建议</button>
+          </form>
+          <p id="shuttle-plan-result" class="hint">选择起点和终点后可生成推荐线路。</p>
+        </article>
+
+        <article class="card">
+          <h3>实时线路（模拟）</h3>
+          <ul id="shuttle-list" class="resource-list"></ul>
+          <p id="shuttle-tip" class="hint">每 20 秒自动刷新站点 ETA</p>
+        </article>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <span>Campus Lite PWA Blueprint</span>
+      <span id="last-sync">最近同步：尚未同步</span>
+    </footer>
+  </div>
+
+  <div id="login-prompt-modal" class="modal" aria-hidden="true">
+    <div class="modal-mask" data-close-prompt></div>
+    <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="prompt-title">
+      <h3 id="prompt-title">首次访问建议先登录</h3>
+      <p>登录后可保存你的地图偏好、课表主题与个性化提醒。此项目为模拟登录，不接入真实账号系统。</p>
+      <div class="modal-actions">
+        <button id="prompt-login-btn" class="btn" type="button">去登录</button>
+        <button class="btn secondary" type="button" data-close-prompt>稍后再说</button>
+      </div>
+    </section>
+  </div>
+
+  <template id="news-item-template">
+    <li class="news-item">
+      <h3 class="news-title"></h3>
+      <p class="news-meta"></p>
+      <p class="news-summary"></p>
+    </li>
+  </template>
+
+  <script src="./js/storage.js" defer></script>
+  <script src="./js/db.js" defer></script>
+  <script src="./js/app.js" defer></script>
+</body>
+</html>
