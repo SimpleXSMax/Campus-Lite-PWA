@@ -113,7 +113,7 @@ npx http-server -p 8080 -c-1
 
 见 `docs/performance-evaluation.md`。
 
-## 7. 毕设评估建议
+## 7. 毕设评估
 
 见 `docs/graduation-design-review.md`，包含：
 - 内容充实度、创新度、可用度、工程完整度评估；
